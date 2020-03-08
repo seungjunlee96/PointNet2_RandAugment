@@ -31,6 +31,26 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 ``pip install -e .``
 
 
+Example training
+------------------
+
+Two training examples are provided by ``pointnet2/train/train_sem_seg.py`` and ``pointnet2/train/train_cls.py``.
+The datasets for both will be downloaded automatically by default.
+
+
+They can be run via
+
+::
+
+  python -m pointnet2.train.train_cls
+
+  python -m pointnet2.train.train_sem_seg
+
+
+Both scripts will print training progress after every epoch to the command line.  Use the ``--visdom`` flag to
+enable logging to visdom and more detailed logging of training progress.
+
+
 ## Reference By
 [yanx27/Pointnet_Pointnet2_pytorch](https://github.com/yanx27/Pointnet_Pointnet2_pytorch)<br>
 [erikwijmans/Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch)<br>
