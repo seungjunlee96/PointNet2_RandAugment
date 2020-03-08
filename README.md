@@ -67,7 +67,8 @@ Citation
       booktitle={Advances in Neural Information Processing Systems},
       pages={5099--5108},
       year={2017}
-  }```
+  }
+ ```
   
 ## Reference By
 [yanx27/Pointnet_Pointnet2_pytorch](https://github.com/yanx27/Pointnet_Pointnet2_pytorch)<br>
