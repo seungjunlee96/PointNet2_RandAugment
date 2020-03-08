@@ -10,7 +10,7 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 * Supports PyTorch version >= 1.0.0.  Use `v1.0 <https://github.com/erikwijmans/Pointnet2_PyTorch/releases/tag/v1.0>`_
   for support of older versions of PyTorch.
 
-Setup
+# Setup
 -----
 
 * Install ``python`` -- This repo is tested with ``2.7``, ``3.5``, and ``3.6``
@@ -18,23 +18,17 @@ Setup
 
 * Install dependencies
 
-  ::
-
-    pip install -r requirements.txt
+``pip install -r requirements.txt``
 
 
 * Building `_ext` module
 
-  ::
-
-    python setup.py build_ext --inplace
+``python setup.py build_ext --inplace``
 
 
 * Optionally, you can also install this repo as a package
 
-  ::
-
-    pip install -e .
+``pip install -e .``
 
 
 ## Reference By
