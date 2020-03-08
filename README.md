@@ -40,12 +40,12 @@ The datasets for both will be downloaded automatically by default.
 
 They can be run via
 
-::
+```
 
-`<addr>`  python -m pointnet2.train.train_cls
+  python -m pointnet2.train.train_cls
 
   python -m pointnet2.train.train_sem_seg
-
+```
 
 Both scripts will print training progress after every epoch to the command line.  Use the ``--visdom`` flag to
 enable logging to visdom and more detailed logging of training progress.
