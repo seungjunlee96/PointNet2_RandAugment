@@ -42,7 +42,7 @@ They can be run via
 
 ::
 
-  python -m pointnet2.train.train_cls
+`<addr>`  python -m pointnet2.train.train_cls
 
   python -m pointnet2.train.train_sem_seg
 
