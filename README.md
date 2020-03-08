@@ -18,17 +18,17 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 
 * Install dependencies
 
-``pip install -r requirements.txt``
+  ```pip install -r requirements.txt```
 
 
 * Building `_ext` module
 
-``python setup.py build_ext --inplace``
+  ```python setup.py build_ext --inplace```
 
 
 * Optionally, you can also install this repo as a package
-
-``pip install -e .``
+  
+  ```pip install -e .```
 
 
 Example training
@@ -41,7 +41,6 @@ The datasets for both will be downloaded automatically by default.
 They can be run via
 
 ```
-
   python -m pointnet2.train.train_cls
 
   python -m pointnet2.train.train_sem_seg
