@@ -50,6 +50,27 @@ Both scripts will print training progress after every epoch to the command line.
 enable logging to visdom and more detailed logging of training progress.
 
 
+Citation
+--------
+
+::
+
+  @article{pytorchpointnet++,
+        Author = {Seungjun Lee},
+        Title = {Pointnet++ RandAugment},
+        Journal = {https://github.com/seungjunlee96/PointNet2_RandAugment},
+        Year = {2020}
+  }
+
+  @inproceedings{qi2017pointnet++,
+      title={Pointnet++: Deep hierarchical feature learning on point sets in a metric space},
+      author={Qi, Charles Ruizhongtai and Yi, Li and Su, Hao and Guibas, Leonidas J},
+      booktitle={Advances in Neural Information Processing Systems},
+      pages={5099--5108},
+      year={2017}
+  }
+  
+  
 ## Reference By
 [yanx27/Pointnet_Pointnet2_pytorch](https://github.com/yanx27/Pointnet_Pointnet2_pytorch)<br>
 [erikwijmans/Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch)<br>
