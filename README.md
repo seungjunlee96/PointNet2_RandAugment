@@ -10,6 +10,11 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 * Supports PyTorch version >= 1.0.0.  Use `v1.0 <https://github.com/erikwijmans/Pointnet2_PyTorch/releases/tag/v1.0>`_
   for support of older versions of PyTorch.
 
+* Multiple augmentations were deployed
+
+![augmentations](./augmentations.png)
+
+
 # Setup
 -----
 
