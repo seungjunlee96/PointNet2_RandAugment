@@ -36,7 +36,7 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
   ```pip install -e .```
 
 
-Example training
+training
 ------------------
 
 Two training examples are provided by ``pointnet2/train/train_sem_seg.py`` and ``pointnet2/train/train_cls.py``.
