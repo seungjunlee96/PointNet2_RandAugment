@@ -14,7 +14,7 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 
 ![augmentations](./augmentations.png)
 
-# Classification 
+# Classification Result
 |classfication|acc|
 |:---:|:---:|
 |PointNet++(Official, w/o normal)|90.7|
