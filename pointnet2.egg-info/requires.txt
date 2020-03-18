@@ -1,0 +1,5 @@
+etw_pytorch_utils==1.1.1
+h5py
+pprint
+enum34
+future
