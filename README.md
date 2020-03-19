@@ -10,7 +10,10 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 * Supports PyTorch version >= 1.0.0.  Use `v1.0 <https://github.com/erikwijmans/Pointnet2_PyTorch/releases/tag/v1.0>`_
   for support of older versions of PyTorch.
 
+# Visualization
 * Multiple augmentations were deployed.(Check below image that shows some examples of augmentation methods)
+
+`python ./data/pointnet2/ModelNet40Loader`
 
 ![augmentations](./augmentations.png)
 
