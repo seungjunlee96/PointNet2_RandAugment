@@ -21,7 +21,7 @@ Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https
 |:---:|:---:|
 |PointNet++(Official, w/o normal)|90.7|
 |PointNet++(Official, with normal)|91.9|
-|**Ours**|**92.3**|
+|**Ours**|**92.9**|
 
 # Setup
 -----
