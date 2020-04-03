@@ -20,14 +20,14 @@ _ext_headers = glob.glob("{}/include/*".format(_ext_src_root))
 requirements = ["etw_pytorch_utils==1.1.1", "h5py", "pprint", "enum34", "future"]
 
 setup(
-    name="pointnet2_RandAugment",
+    name="pointnet2",
     version=pointnet2.__version__,
     author="Seungjun Lee",
     packages=find_packages(),
     install_requires=requirements,
     ext_modules=[
         CUDAExtension(
-            name="pointnet2._ext",
+            name="pointnet2_RandAugment._ext",
             sources=_ext_sources,
             extra_compile_args={
                 "cxx": ["-O2", "-I{}".format("{}/include".format(_ext_src_root))],
