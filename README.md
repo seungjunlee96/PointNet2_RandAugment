@@ -83,8 +83,14 @@ Citation
       year={2017}
   }
  ```
-  
-## Reference By
+
+# To Do
+- Training on Segmentation
+- SSG vs MSG
+- More Data augmentation methods
+
+
+# Reference By
 [yanx27/Pointnet_Pointnet2_pytorch](https://github.com/yanx27/Pointnet_Pointnet2_pytorch)<br>
 [erikwijmans/Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch)<br>
 [ildoonet's RandAugment](https://github.com/ildoonet/pytorch-randaugment)<br>
