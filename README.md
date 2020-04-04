@@ -85,7 +85,7 @@ Citation
  ```
 
 # To Do
-- Training on Segmentation
+- Training and evaluation on Segmentation
 - SSG vs MSG
 - More Data augmentation methods
 
