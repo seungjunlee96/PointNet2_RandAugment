@@ -1,8 +1,10 @@
 # PointNet++ RandAugment
 
-This repo is implementation for [PointNet](http://openaccess.thecvf.com/content_cvpr_2017/papers/Qi_PointNet_Deep_Learning_CVPR_2017_paper.pdf) and [PointNet++](http://papers.nips.cc/paper/7095-pointnet-deep-hierarchical-feature-learning-on-point-sets-in-a-metric-space.pdf) with Novel data augmentation methods and RandAugment for point cloud data to handle with 3D classification task
+This repo is implementation for [PointNet](http://openaccess.thecvf.com/content_cvpr_2017/papers/Qi_PointNet_Deep_Learning_CVPR_2017_paper.pdf) and [PointNet++](http://papers.nips.cc/paper/7095-pointnet-deep-hierarchical-feature-learning-on-point-sets-in-a-metric-space.pdf) with Novel data augmentation methods and RandAugment for point cloud data to handle with 3D classification task<br>
+Baseline code for PointNet2 in Pytorch mostly borrowed from [erikwijmans/Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch)<br>
 
-Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https://github.com/ildoonet/pytorch-randaugment)
+Unofficial PyTorch modification of RandAugment by [ildoonet's RandAugment](https://github.com/ildoonet/pytorch-randaugment)<br>
+
 
 
 * Supports Multi-GPU via `nn.DataParallel <https://pytorch.org/docs/stable/nn.html#torch.nn.DataParallel>`_.
