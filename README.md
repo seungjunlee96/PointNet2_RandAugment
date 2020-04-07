@@ -15,6 +15,7 @@ The primary goal of RandAugment is to remove the need for a separate search phas
 There are only two parameters to tune the RandAugment
 - N, Number of augmentation transformation to apply sequentially.
 - M, Magnitude for all the transformations
+Below code shows applying RandAugment.(code from original paper of RandAugment)
 ```python
 transforms = [
 ’Identity’, ’AutoContrast’, ’Equalize’,
