@@ -10,41 +10,6 @@ This repo is 3D pointcloud version of [RandAugment: Practical automated data aug
 * Supports PyTorch version >= 1.0.0.  Use `v1.0 <https://github.com/erikwijmans/Pointnet2_PyTorch/releases/tag/v1.0>`_
   for support of older versions of PyTorch.
 
-# Brief summary of RandAugment
-The primary goal of RandAugment is to remove the need for a separate search phase on a proxy task.<br>
-There are only two parameters to tune the RandAugment
-- N, Number of augmentation transformation to apply sequentially.
-- M, Magnitude for all the transformations
-Below code shows applying RandAugment.(code from original paper of RandAugment)
-```python
-transforms = [
-’Identity’, ’AutoContrast’, ’Equalize’,
-’Rotate’, ’Solarize’, ’Color’, ’Posterize’,
-’Contrast’, ’Brightness’, ’Sharpness’,
-’ShearX’, ’ShearY’, ’TranslateX’, ’TranslateY’]
-def randaugment(N, M):
-"""Generate a set of distortions.
-Args:
-N: Number of augmentation transformations to
-apply sequentially.
-M: Magnitude for all the transformations.
-"""
-sampled_ops = np.random.choice(transforms, N)
-return [(op, M) for op in sampled_ops]
-```
-# Visualization
-* Multiple augmentations were deployed.(Check below image that shows some examples of augmentation methods)<br>
-  `python ./data/pointnet2/ModelNet40Loader`
-
-![augmentations](./augmentations.png)
-
-# Classification Result
-|classfication|acc|
-|:---:|:---:|
-|PointNet++(Official, w/o normal)|90.7|
-|PointNet++(Official, with normal)|91.9|
-|**Ours**|**92.9**|
-
 # Setup
 -----
 
@@ -85,6 +50,19 @@ Both scripts will print training progress after every epoch to the command line.
 enable logging to visdom and more detailed logging of training progress.
 
 
+# Visualization
+* Multiple augmentations were deployed.(Check below image that shows some examples of augmentation methods)<br>
+  `python ./data/pointnet2/ModelNet40Loader`
+
+![augmentations](./augmentations.png)
+
+# Classification Result
+|classfication|acc|
+|:---:|:---:|
+|PointNet++(Official, w/o normal)|90.7|
+|PointNet++(Official, with normal)|91.9|
+|**Ours**|**92.9**|
+
 Citation
 --------
 
@@ -105,6 +83,28 @@ Citation
   }
  ```
 
+# Brief summary of RandAugment
+The primary goal of RandAugment is to remove the need for a separate search phase on a proxy task.<br>
+There are only two parameters to tune the RandAugment
+- N, Number of augmentation transformation to apply sequentially.
+- M, Magnitude for all the transformations
+Below code shows applying RandAugment.(code from original paper of RandAugment)
+```python
+transforms = [
+’Identity’, ’AutoContrast’, ’Equalize’,
+’Rotate’, ’Solarize’, ’Color’, ’Posterize’,
+’Contrast’, ’Brightness’, ’Sharpness’,
+’ShearX’, ’ShearY’, ’TranslateX’, ’TranslateY’]
+def randaugment(N, M):
+"""Generate a set of distortions.
+Args:
+N: Number of augmentation transformations to
+apply sequentially.
+M: Magnitude for all the transformations.
+"""
+sampled_ops = np.random.choice(transforms, N)
+return [(op, M) for op in sampled_ops]
+```
 # To Do
 - Training and evaluation on Segmentation
 - SSG vs MSG
