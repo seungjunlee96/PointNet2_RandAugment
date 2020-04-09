@@ -31,7 +31,7 @@ This repo is 3D pointcloud version of [RandAugment: Practical automated data aug
   ```pip install -e .```
 
 
-training
+# Training
 ------------------
 
 Two training examples are provided by ``pointnet2/train/train_sem_seg.py`` and ``pointnet2/train/train_cls.py``.
