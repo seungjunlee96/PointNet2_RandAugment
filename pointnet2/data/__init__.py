@@ -7,5 +7,3 @@ from __future__ import (
 )
 from .ModelNet40Loader import ModelNet40Cls
 from .Indoor3DSemSegLoader import Indoor3DSemSeg
-from .pointcloud_transforms import *
-from .RandAugment import *
