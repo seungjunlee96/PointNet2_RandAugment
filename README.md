@@ -21,15 +21,8 @@ This repo is 3D pointcloud version of [RandAugment: Practical automated data aug
   ```pip install -r requirements.txt```
 
 
-* Building `_ext` module
-
-  ```python setup.py build_ext --inplace```
-
-
-* Optionally, you can also install this repo as a package
+* Install with: ``pip install -e .``
   
-  ```pip install -e .```
-
 
 # Training
 ------------------
@@ -41,9 +34,14 @@ The datasets for both will be downloaded automatically by default.
 They can be run via
 
 ```
-  python -m pointnet2.train.train_cls
 
-  python -m pointnet2.train.train_sem_seg
+  python pointnet2/train.py task=cls
+
+  # Or with model=msg for multi-scale grouping
+
+  python pointnet2/train.py task=cls model=msg
+
+
 ```
 
 Both scripts will print training progress after every epoch to the command line.  Use the ``--visdom`` flag to
