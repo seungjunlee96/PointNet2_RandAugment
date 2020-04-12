@@ -1,1 +1,161 @@
-from __future__ import (    division,    absolute_import,    with_statement,    print_function,    unicode_literals,)import torchimport torch.utils.data as dataimport numpy as npimport osimport h5pyimport subprocessimport shlexBASE_DIR = os.path.dirname(os.path.abspath(__file__))def _get_data_files(list_filename):    with open(list_filename) as f:        return [line.rstrip()[5:] for line in f]def _load_data_file(name):    f = h5py.File(name)    data = f["data"][:]    label = f["label"][:]    return data, labeldef FarthestPointSample(point, npoint):    """    Input:        xyz: pointcloud data, [N, D]        npoint: number of samples    Return:        centroids: sampled pointcloud index, [npoint, D]    References : https://github.com/yanx27/Pointnet_Pointnet2_pytorch/blob/master/data_utils/ModelNetDataLoader.py    """    N, D = point.shape    xyz = point[:,:3]    centroids = np.zeros((npoint,))    distance = np.ones((N,)) * 1e10    farthest = np.random.randint(0, N)    for i in range(npoint):        centroids[i] = farthest        centroid = xyz[farthest, :]        dist = np.sum((xyz - centroid) ** 2, -1)        mask = dist < distance        distance[mask] = dist[mask]        farthest = np.argmax(distance, -1)    point = point[centroids.astype(np.int32)]    return pointclass ModelNet40Cls(data.Dataset):    def __init__(self, num_points, transforms=None, train=True, download=True):        super().__init__()        self.transforms = transforms        self.folder = "modelnet40_ply_hdf5_2048"        self.data_dir = os.path.join(BASE_DIR, self.folder)        self.url = "https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip"        if download and not os.path.exists(self.data_dir):            zipfile = os.path.join(BASE_DIR, os.path.basename(self.url))            subprocess.check_call(                shlex.split("curl {} -o {}".format(self.url, zipfile))            )            subprocess.check_call(                shlex.split("unzip {} -d {}".format(zipfile, BASE_DIR))            )            subprocess.check_call(shlex.split("rm {}".format(zipfile)))        self.train = train        if self.train:            self.files = _get_data_files(os.path.join(self.data_dir, "train_files.txt"))        else:            self.files = _get_data_files(os.path.join(self.data_dir, "test_files.txt"))        point_list, label_list = [], []        for f in self.files:            points, labels = _load_data_file(os.path.join(BASE_DIR, f))            point_list.append(points)            label_list.append(labels)        self.points = np.concatenate(point_list, 0)        self.labels = np.concatenate(label_list, 0)        self.set_num_points(num_points)    def __getitem__(self, idx):        # pt_idxs = np.arange(0, self.num_points)        # np.random.shuffle(pt_idxs)        # sampled_points = self.points[idx, pt_idxs].copy()        points = self.points[idx].copy()        sampled_points = FarthestPointSample(point= points, npoint=self.num_points)        label = torch.from_numpy(self.labels[idx]).type(torch.LongTensor)        if self.transforms is not None:            sampled_points = self.transforms(sampled_points)        return sampled_points, label    def __len__(self):        return self.points.shape[0]    def set_num_points(self, pts):        self.num_points = min(self.points.shape[1], pts)    def randomize(self):        passif __name__ == "__main__":    from torchvision import transforms    import data_utils as d_utils    import open3d as o3d    from RandAugment import RandAugment    import argparse    def parse_args():        parser = argparse.ArgumentParser(            description = "Arguments for ModelNet Visualization",            formatter_class = argparse.ArgumentDefaultsHelpFormatter,        )        parser.add_argument("-N", type=int, default=4, help="RandAugment N")        parser.add_argument("-M", type=int, default=4, help="RandAugment M")        return parser.parse_args()    args = parse_args()    transforms = transforms.Compose(        [            RandAugment(n=args.N, m=args.M),            d_utils.PointCloudToTensor(),            d_utils.PointCloudNormalize(),        ]    )    dset = ModelNet40Cls(1024, train = True, transforms=transforms)    pc , _ = dset[100]    pc = pc[:,0:3]    #dloader = torch.utils.data.DataLoader(dset, batch_size = 1, shuffle=True)    xyz = pc.numpy()    # Pass xyz to Open3D.o3d.geometry.PointCloud and visualize    pcd = o3d.geometry.PointCloud()    pcd.points = o3d.utility.Vector3dVector(xyz)    o3d.io.write_point_cloud("sync.ply", pcd)    # Load saved point cloud and visualize it    pcd_load = o3d.io.read_point_cloud("sync.ply")    o3d.visualization.draw_geometries([pcd_load])    # convert Open3D.o3d.geometry.PointCloud to numpy array    xyz_load = np.asarray(pcd_load.points)    print('xyz_load')    print(xyz_load)
+import os
+import os.path as osp
+import shlex
+import shutil
+import subprocess
+
+import lmdb
+import msgpack_numpy
+import numpy as np
+import torch
+import torch.utils.data as data
+import tqdm
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def pc_normalize(pc):
+    l = pc.shape[0]
+    centroid = np.mean(pc, axis=0)
+    pc = pc - centroid
+    m = np.max(np.sqrt(np.sum(pc ** 2, axis=1)))
+    pc = pc / m
+    return pc
+
+
+class ModelNet40Cls(data.Dataset):
+    def __init__(self, num_points, transforms=None, train=True, download=True):
+        super().__init__()
+
+        self.transforms = transforms
+
+        self.set_num_points(num_points)
+        self._cache = os.path.join(BASE_DIR, "modelnet40_normal_resampled_cache")
+
+        if not osp.exists(self._cache):
+            self.folder = "modelnet40_normal_resampled"
+            self.data_dir = os.path.join(BASE_DIR, self.folder)
+            self.url = (
+                "https://shapenet.cs.stanford.edu/media/modelnet40_normal_resampled.zip"
+            )
+
+            if download and not os.path.exists(self.data_dir):
+                zipfile = os.path.join(BASE_DIR, os.path.basename(self.url))
+                subprocess.check_call(
+                    shlex.split("curl {} -o {}".format(self.url, zipfile))
+                )
+
+                subprocess.check_call(
+                    shlex.split("unzip {} -d {}".format(zipfile, BASE_DIR))
+                )
+
+                subprocess.check_call(shlex.split("rm {}".format(zipfile)))
+
+            self.train = train
+            self.set_num_points(num_points)
+
+            self.catfile = os.path.join(self.data_dir, "modelnet40_shape_names.txt")
+            self.cat = [line.rstrip() for line in open(self.catfile)]
+            self.classes = dict(zip(self.cat, range(len(self.cat))))
+
+            os.makedirs(self._cache)
+
+            print("Converted to LMDB for faster dataloading while training")
+            for split in ["train", "test"]:
+                if split == "train":
+                    shape_ids = [
+                        line.rstrip()
+                        for line in open(
+                            os.path.join(self.data_dir, "modelnet40_train.txt")
+                        )
+                    ]
+                else:
+                    shape_ids = [
+                        line.rstrip()
+                        for line in open(
+                            os.path.join(self.data_dir, "modelnet40_test.txt")
+                        )
+                    ]
+
+                shape_names = ["_".join(x.split("_")[0:-1]) for x in shape_ids]
+                # list of (shape_name, shape_txt_file_path) tuple
+                self.datapath = [
+                    (
+                        shape_names[i],
+                        os.path.join(self.data_dir, shape_names[i], shape_ids[i])
+                        + ".txt",
+                    )
+                    for i in range(len(shape_ids))
+                ]
+
+                with lmdb.open(
+                    osp.join(self._cache, split), map_size=1 << 36
+                ) as lmdb_env, lmdb_env.begin(write=True) as txn:
+                    for i in tqdm.trange(len(self.datapath)):
+                        fn = self.datapath[i]
+                        point_set = np.loadtxt(fn[1], delimiter=",").astype(np.float32)
+                        cls = self.classes[self.datapath[i][0]]
+                        cls = int(cls)
+
+                        txn.put(
+                            str(i).encode(),
+                            msgpack_numpy.packb(
+                                dict(pc=point_set, lbl=cls), use_bin_type=True
+                            ),
+                        )
+
+            shutil.rmtree(self.data_dir)
+
+        self._lmdb_file = osp.join(self._cache, "train" if train else "test")
+        with lmdb.open(self._lmdb_file, map_size=1 << 36) as lmdb_env:
+            self._len = lmdb_env.stat()["entries"]
+
+        self._lmdb_env = None
+
+    def __getitem__(self, idx):
+        if self._lmdb_env is None:
+            self._lmdb_env = lmdb.open(
+                self._lmdb_file, map_size=1 << 36, readonly=True, lock=False
+            )
+
+        with self._lmdb_env.begin(buffers=True) as txn:
+            ele = msgpack_numpy.unpackb(txn.get(str(idx).encode()), raw=False)
+
+        point_set = ele["pc"]
+
+        pt_idxs = np.arange(0, self.num_points)
+        np.random.shuffle(pt_idxs)
+
+        point_set = point_set[pt_idxs, :]
+        point_set[:, 0:3] = pc_normalize(point_set[:, 0:3])
+
+        if self.transforms is not None:
+            point_set = self.transforms(point_set)
+
+        return point_set, ele["lbl"]
+
+    def __len__(self):
+        return self._len
+
+    def set_num_points(self, pts):
+        self.num_points = min(int(1e5), pts)
+
+
+if __name__ == "__main__":
+    from torchvision import transforms
+    import data_utils as d_utils
+
+    transforms = transforms.Compose(
+        [
+            d_utils.PointcloudToTensor(),
+            d_utils.PointcloudRotate(axis=np.array([1, 0, 0])),
+            d_utils.PointcloudScale(),
+            d_utils.PointcloudTranslate(),
+            d_utils.PointcloudJitter(),
+        ]
+    )
+    dset = ModelNet40Cls(16, train=True, transforms=transforms)
+    print(dset[0][0])
+    print(dset[0][1])
+    print(len(dset))
+    dloader = torch.utils.data.DataLoader(dset, batch_size=32, shuffle=True)
