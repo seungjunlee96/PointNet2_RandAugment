@@ -194,9 +194,13 @@ class PointNet2ClassificationSSG(pl.LightningModule):
         return [optimizer], [lr_scheduler, bnm_scheduler]
 
     def prepare_data(self):
+        from pointnet2.data.RandAugment import RandAugment
+        N = 4
+        M = 4
         train_transforms = transforms.Compose(
             [
                 d_utils.PointcloudToTensor(),
+                RandAugment(N, M),  # parameter:  N , M
                 d_utils.PointcloudScale(),
                 d_utils.PointcloudRotate(),
                 d_utils.PointcloudRotatePerturbation(),
