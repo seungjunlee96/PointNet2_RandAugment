@@ -61,6 +61,9 @@ enable logging to visdom and more detailed logging of training progress.
 |PointNet++(Official, with normal)|91.9|
 |**Ours**|**92.8**|
 
+# Segmentation Result
+Testing
+
 Citation
 --------
 
