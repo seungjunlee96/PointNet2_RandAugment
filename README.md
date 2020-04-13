@@ -59,7 +59,7 @@ enable logging to visdom and more detailed logging of training progress.
 |:---:|:---:|
 |PointNet++(Official, w/o normal)|90.7|
 |PointNet++(Official, with normal)|91.9|
-|**Ours**|**92.9**|
+|**Ours**|**92.8**|
 
 Citation
 --------
