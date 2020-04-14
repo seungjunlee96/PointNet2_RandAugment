@@ -19,7 +19,7 @@ os.environ["TORCH_CUDA_ARCH_LIST"] = "3.7+PTX;5.0;6.0;6.1;6.2;7.0;7.5"
 setup(
     name="pointnet2_ops",
     version=__version__,
-    author="Erik Wijmans",
+    author="SeungJun Lee",
     packages=find_packages(),
     install_requires=requirements,
     ext_modules=[
