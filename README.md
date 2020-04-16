@@ -21,8 +21,10 @@ This repo is 3D pointcloud version of [RandAugment: Practical automated data aug
   ```pip install -r requirements.txt```
 
 
-* Install with: ``pip install -e .``
-  
+* Install with: ``pip install -e .``<br>
+
+If you rush into error message `RuntimeError: Ninja is required to load C++ extension`,
+please refer to https://github.com/zhanghang1989/PyTorch-Encoding/issues/167 for error shooting.
 
 # Training
 ------------------
